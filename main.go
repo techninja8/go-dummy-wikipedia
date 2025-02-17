@@ -3,7 +3,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"html/template"
 	"log"
@@ -43,7 +42,7 @@ func loadPage(title string) (*Page, error) {
 	// When a part of a return is not needed, we can substitute it with nil
 }
 
-func input() (string, bool) {
+/*func input() (string, bool) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	if !scanner.Scan() {
@@ -56,7 +55,7 @@ func input() (string, bool) {
 		fmt.Println("Input Successful!")
 	}
 	return scanner.Text(), true
-}
+}*/
 
 // Responsible for handling http requests
 // Derive title from request
@@ -67,6 +66,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	p, err := loadPage(title)
 	if err != nil {
+		fmt.Printf("Editing new file %s...", title)
 		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
 		return
 	}
@@ -74,6 +74,14 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, p)
 
 	// fmt.Fprintf(w, "<h1>%s<h1><div>%s<div>", p.Title, string(p.Body))
+}
+
+func saveHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/save/"):]
+	body := r.FormValue("body")
+	p := &Page{Title: title, Body: []byte(body)}
+	p.Save()
+	http.Redirect(w, r, "/view/"+title, http.StatusFound)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
