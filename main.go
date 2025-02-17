@@ -61,10 +61,13 @@ func input() (string, bool) {
 // Derive title from request
 // Use the title to derive the file from our source directory
 // Do some basic formatting with the content of the file
-func viewHandler(w http.ResponseWriter, r *http.Request)  {
+
+func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	p, _ := loadPage(title)
-	fmt.Fprintf(w. "<h1>%s<h1><div>%s<div>", p.Title, p.Body)
+
+	println(string(p.Body))
+	fmt.Fprintf(w, "<h1>%s<h1><div>%s<div>", p.Title, p.Body)
 }
 
 func main() {
@@ -75,7 +78,11 @@ func main() {
 	// Return the content of the file
 
 	// Program prompt
-	fmt.Print("Filename: ")
+
+	http.HandleFunc("/view/", viewHandler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	/*fmt.Print("Filename: ")
 
 	// input() takes in inputs and handle empty input errors
 	filenameinput, _ := input()
@@ -106,5 +113,5 @@ func main() {
 
 	// Output the content of the file
 	body := string(page.Body) // since the program return nil if an error occurs we have to exit the program.
-	fmt.Println(body)
+	fmt.Println(body)*/
 }
