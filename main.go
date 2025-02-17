@@ -65,10 +65,15 @@ func input() (string, bool) {
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
-	p, _ := loadPage(title)
+	p, err := loadPage(title)
+	if err != nil {
+		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
+		return
+	}
+	t, _ := template.ParseFiles("view.html")
+	t.Execute(w, p)
 
-	println(string(p.Body))
-	fmt.Fprintf(w, "<h1>%s<h1><div>%s<div>", p.Title, string(p.Body))
+	// fmt.Fprintf(w, "<h1>%s<h1><div>%s<div>", p.Title, string(p.Body))
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
@@ -80,6 +85,7 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles("edit.html")
 	t.Execute(w, p)
 }
+
 func main() {
 	// Define a new scanner method
 	// Collect users input
@@ -90,6 +96,8 @@ func main() {
 	// Program prompt
 
 	http.HandleFunc("/view/", viewHandler)
+
+	http.HandleFunc("/edit/", editHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 	/*fmt.Print("Filename: ")
