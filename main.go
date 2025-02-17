@@ -62,6 +62,10 @@ func loadPage(title string) (*Page, error) {
 // Use the title to derive the file from our source directory
 // Do some basic formatting with the content of the file
 
+func renderTemplate(w http.ResponseWriter, templ string, p *Page) {
+	t, _ := template.ParseFiles(templ + "html")
+	t.Execute(w, p)
+}
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	p, err := loadPage(title)
@@ -70,8 +74,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
 		return
 	}
-	t, _ := template.ParseFiles("view.html")
-	t.Execute(w, p)
+	renderTemplate(w, "view", p)
 
 	// fmt.Fprintf(w, "<h1>%s<h1><div>%s<div>", p.Title, string(p.Body))
 }
@@ -90,8 +93,7 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		p = &Page{Title: title}
 	}
-	t, _ := template.ParseFiles("edit.html")
-	t.Execute(w, p)
+	renderTemplate(w, "edit", p)
 }
 
 func main() {
