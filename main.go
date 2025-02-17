@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -54,6 +55,16 @@ func input() (string, bool) {
 		fmt.Println("Input Successful!")
 	}
 	return scanner.Text(), true
+}
+
+// Responsible for handling http requests
+// Derive title from request
+// Use the title to derive the file from our source directory
+// Do some basic formatting with the content of the file
+func viewHandler(w http.ResponseWriter, r *http.Request)  {
+	title := r.URL.Path[len("/view/"):]
+	p, _ := loadPage(title)
+	fmt.Fprintf(w. "<h1>%s<h1><div>%s<div>", p.Title, p.Body)
 }
 
 func main() {
