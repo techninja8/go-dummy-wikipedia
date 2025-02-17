@@ -1,5 +1,61 @@
-<h1>{{.Title}}</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .content {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            min-height: 200px;
+            white-space: pre-wrap; /* Preserves formatting for new lines */
+        }
+        .edit-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .edit-link:hover {
+            background-color: #0056b3;
+        }
+        .edit-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
 
-<p>[<a href="/edit/{{.Title}}">edit</a>]</p>
+    <h1>{{.Title}}</h1>
 
-<div>{{printf "%s" .Body}}</div>
+    <div class="content">
+        {{printf "%s" .Body}}
+    </div>
+
+    <div class="edit-container">
+        <a href="/edit/{{.Title}}" class="edit-link">Edit</a>
+    </div>
+
+</body>
+</html>
